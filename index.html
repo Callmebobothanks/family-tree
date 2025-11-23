@@ -1,0 +1,1859 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>杨氏家族家谱</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+            scroll-behavior: smooth;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 15s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(180deg); }
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+            letter-spacing: 2px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            font-weight: 300;
+        }
+
+        .nav {
+            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+            padding: 18px 20px;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            max-height: 200px;
+            overflow-y: auto;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .nav.sticky {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .nav button {
+            padding: 12px 22px;
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(102, 126, 234, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .nav button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .nav button:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .content {
+            padding: 30px;
+            position: relative;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 4px solid;
+            border-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%) 1;
+            position: relative;
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            background: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            min-width: 800px;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        th {
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            transition: background 0.2s;
+        }
+
+        tbody tr {
+            transition: all 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #f0f4ff;
+            transform: scale(1.01);
+        }
+
+        tbody tr:nth-child(even) {
+            background: #fafbfc;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .person-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .person-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .person-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .person-photo {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #667eea;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            transition: transform 0.3s;
+        }
+
+        .person-card:hover .person-photo {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .person-info {
+            flex: 1;
+        }
+
+        .person-name {
+            font-size: 1.6em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .person-relation {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .person-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .detail-item {
+            padding: 15px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s;
+        }
+
+        .detail-item:hover {
+            background: linear-gradient(135deg, #f0f4ff 0%, #ffffff 100%);
+            transform: translateX(5px);
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .search-box {
+            margin: 20px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .search-box.sticky {
+            position: sticky;
+            top: 0;
+            z-index: 99;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-radius: 0 0 15px 15px;
+            margin: 0;
+            padding: 15px 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 30px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .search-box input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: scale(1.02);
+        }
+
+        .search-box input::placeholder {
+            color: #999;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin: 25px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            transition: transform 0.5s;
+        }
+
+        .stat-card:hover::before {
+            transform: scale(1.2);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 30px 15px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .nav {
+                padding: 12px 15px;
+            }
+
+            .nav button {
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+
+            .content {
+                padding: 20px 15px;
+            }
+
+            .section h2 {
+                font-size: 1.6em;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            th, td {
+                padding: 10px 8px;
+            }
+
+            .person-details {
+                grid-template-columns: 1fr;
+            }
+
+            .person-photo {
+                width: 70px;
+                height: 70px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .stat-card {
+                padding: 20px;
+            }
+
+            .stat-number {
+                font-size: 2em;
+            }
+        }
+
+        .empty-cell {
+            color: #ccc;
+            font-style: italic;
+        }
+
+        /* 滚动条美化 */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>杨氏家族家谱</h1>
+            <p>传承家族文化，记录家族历史</p>
+        </div>
+
+        <div class="nav">
+
+            <button class="nav-btn" onclick="showSection('compilers')">修谱名录</button>
+            <button class="nav-btn" onclick="showSection('preface')">谱首</button>
+            <button class="nav-btn" onclick="showSection('ancestors')">先祖溯源</button>
+            <button class="nav-btn" onclick="showSection('generation')">字辈谱序</button>
+            <button class="nav-btn active" onclick="showSection('overview')">数据概览</button>
+            <button class="nav-btn" onclick="showSection('genealogy')">世系图谱</button>
+            <button class="nav-btn" onclick="showSection('members')">家族成员</button>
+            <button class="nav-btn" onclick="showSection('biographies')">族人传略</button>
+            <button class="nav-btn" onclick="showSection('appendix')">附录</button>
+            <button class="nav-btn" onclick="showSection('epilogue')">跋</button>
+        </div>
+
+        <div class="content">
+            <!-- 数据概览 -->
+            <div id="overview" class="section active">
+                <h2>数据概览</h2>
+                <div class="loading">正在加载数据...</div>
+            </div>
+
+            <!-- 世系图谱 -->
+            <div id="genealogy" class="section">
+                <h2>世系图谱</h2>
+                <div class="search-box">
+                    <input type="text" id="genealogy-search" placeholder="搜索世系图谱..." onkeyup="searchGenealogy()">
+                </div>
+                <div class="table-container">
+                    <div class="loading">正在加载世系图谱...</div>
+                </div>
+            </div>
+
+            <!-- 家族成员 -->
+            <div id="members" class="section">
+                <h2>家族成员</h2>
+                <div class="search-box">
+                    <input type="text" id="members-search" placeholder="搜索家族成员（姓名、关系、地址等）..." onkeyup="searchMembers()">
+                </div>
+                <div id="members-container">
+                    <div class="loading">正在加载家族成员...</div>
+                </div>
+            </div>
+
+            <!-- 修谱名录 -->
+            <div id="compilers" class="section">
+                <h2>修谱名录</h2>
+                <div class="loading">正在加载修谱名录...</div>
+            </div>
+
+            <!-- 谱首 -->
+            <div id="preface" class="section">
+                <h2>谱首</h2>
+                <div class="loading">正在加载谱首内容...</div>
+            </div>
+
+            <!-- 先祖溯源 -->
+            <div id="ancestors" class="section">
+                <h2>先祖溯源</h2>
+                <div class="loading">正在加载先祖溯源...</div>
+            </div>
+
+            <!-- 字辈谱序 -->
+            <div id="generation" class="section">
+                <h2>字辈谱序</h2>
+                <div class="loading">正在加载字辈谱序...</div>
+            </div>
+
+            <!-- 族人传略 -->
+            <div id="biographies" class="section">
+                <h2>族人传略</h2>
+                <div class="search-box">
+                    <input type="text" id="biographies-search" placeholder="搜索族人传略..." onkeyup="searchBiographies()">
+                </div>
+                <div id="biographies-container">
+                    <div class="loading">正在加载族人传略...</div>
+                </div>
+            </div>
+
+            <!-- 附录 -->
+            <div id="appendix" class="section">
+                <h2>附录</h2>
+                <div>
+                    <h3 class="subsection-title" style="color: #667eea; margin-bottom: 15px;">七、附录</h3>
+                    
+                    <!-- 1. 十二时辰对照表 -->
+                    <div class="person-card">
+                        <h4 style="color: #667eea; margin-bottom: 15px;">1. 十二时辰对照表</h4>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>时辰</th>
+                                        <th>地支</th>
+                                        <th>现代时间</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>子时</td><td>鼠</td><td>23:00 - 01:00</td></tr>
+                                    <tr><td>丑时</td><td>牛</td><td>01:00 - 03:00</td></tr>
+                                    <tr><td>寅时</td><td>虎</td><td>03:00 - 05:00</td></tr>
+                                    <tr><td>卯时</td><td>兔</td><td>05:00 - 07:00</td></tr>
+                                    <tr><td>辰时</td><td>龙</td><td>07:00 - 09:00</td></tr>
+                                    <tr><td>巳时</td><td>蛇</td><td>09:00 - 11:00</td></tr>
+                                    <tr><td>午时</td><td>马</td><td>11:00 - 13:00</td></tr>
+                                    <tr><td>未时</td><td>羊</td><td>13:00 - 15:00</td></tr>
+                                    <tr><td>申时</td><td>猴</td><td>15:00 - 17:00</td></tr>
+                                    <tr><td>酉时</td><td>鸡</td><td>17:00 - 19:00</td></tr>
+                                    <tr><td>戌时</td><td>狗</td><td>19:00 - 21:00</td></tr>
+                                    <tr><td>亥时</td><td>猪</td><td>21:00 - 23:00</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- 2. 二十四节气表 -->
+                    <div class="person-card">
+                        <h4 style="color: #667eea; margin-bottom: 15px;">2. 二十四节气表</h4>
+                        <div class="poem-container" style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 15px 0; font-style: italic; line-height: 1.8;">
+                            <h5 style="color: #764ba2; margin-bottom: 10px;">经典版二十四节气歌（56字）</h5>
+                            <p>春雨惊春清谷天，夏满芒夏暑相连。</p>
+                            <p>秋处露秋寒霜降，冬雪雪冬小大寒。</p>
+                            <p>每月两节不变更，最多相差一两天。</p>
+                            <p>上半年逢六、廿一，下半年逢八、廿三。</p>
+                        </div>
+                        <div class="explanation" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 10px; font-size: 0.95em;">
+                            <p>二十四节气歌不仅是一种时间体系，更是一套具有丰富内涵的生活与民俗系统，反映了中华民族顺应自然、天人协调的生存智慧。2016年11月30日，二十四节气被正式列入联合国教科文组织人类非物质文化遗产代表作名录。</p>
+                            <p>进入21世纪后，各地根据自身特点创作了"新二十四节气歌"，如北京市园林绿化局编写的《首都花园城市二十四节气歌》，将古代天文历法与地方文化相结合，体现了花园城市建设与城市生活、自然节律的和谐。</p>
+                            <p>二十四节气歌是我国古代劳动人民从事农业生产实践总结出来的，对农业生产有重要指导作用，也影响着中国人的思维方式和生产生活。</p>
+                        </div>
+                        <div class="table-container" style="margin-top: 20px;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>季节</th>
+                                        <th>节气</th>
+                                        <th>大致日期</th>
+                                        <th>含义</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td rowspan="6">春</td><td>立春</td><td>2月4/5日</td><td>春季开始</td></tr>
+                                    <tr><td>雨水</td><td>2月18/19日</td><td>降雨渐多</td></tr>
+                                    <tr><td>惊蛰</td><td>3月5/6日</td><td>春雷始鸣，万物复苏</td></tr>
+                                    <tr><td>春分</td><td>3月20/21日</td><td>昼夜等长</td></tr>
+                                    <tr><td>清明</td><td>4月4/5日</td><td>天气晴朗，草木繁茂</td></tr>
+                                    <tr><td>谷雨</td><td>4月19/20日</td><td>雨生百谷</td></tr>
+                                    <tr><td rowspan="6">夏</td><td>立夏</td><td>5月5/6日</td><td>夏季开始</td></tr>
+                                    <tr><td>小满</td><td>5月20/21日</td><td>麦类等夏熟作物籽粒开始饱满</td></tr>
+                                    <tr><td>芒种</td><td>6月5/6日</td><td>麦类等有芒作物成熟</td></tr>
+                                    <tr><td>夏至</td><td>6月21/22日</td><td>北半球白昼最长</td></tr>
+                                    <tr><td>小暑</td><td>7月6/7日</td><td>天气开始炎热</td></tr>
+                                    <tr><td>大暑</td><td>7月22/23日</td><td>一年中最热的时期</td></tr>
+                                    <tr><td rowspan="6">秋</td><td>立秋</td><td>8月7/8日</td><td>秋季开始</td></tr>
+                                    <tr><td>处暑</td><td>8月22/23日</td><td>炎热的暑天结束</td></tr>
+                                    <tr><td>白露</td><td>9月7/8日</td><td>天气转凉，露凝而白</td></tr>
+                                    <tr><td>秋分</td><td>9月22/23日</td><td>昼夜等长</td></tr>
+                                    <tr><td>寒露</td><td>10月8/9日</td><td>气温更低，露水有寒意</td></tr>
+                                    <tr><td>霜降</td><td>10月23/24日</td><td>天气渐冷，开始有霜</td></tr>
+                                    <tr><td rowspan="6">冬</td><td>立冬</td><td>11月7/8日</td><td>冬季开始</td></tr>
+                                    <tr><td>小雪</td><td>11月22/23日</td><td>开始下雪</td></tr>
+                                    <tr><td>大雪</td><td>12月6/7日</td><td>降雪量增大</td></tr>
+                                    <tr><td>冬至</td><td>12月21/22日</td><td>北半球白昼最短</td></tr>
+                                    <tr><td>小寒</td><td>1月5/6日</td><td>气候开始寒冷</td></tr>
+                                    <tr><td>大寒</td><td>1月20/21日</td><td>一年中最冷的时期</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- 3. 古代年龄称谓 -->
+                    <div class="person-card">
+                        <h4 style="color: #667eea; margin-bottom: 15px;">3. 古代年龄称谓</h4>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>年龄</th>
+                                        <th>称谓</th>
+                                        <th>说明</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>初生</td><td>襁褓、赤子</td><td>不满周岁的婴儿。</td></tr>
+                                    <tr><td>2-3岁</td><td>孩提</td><td>幼儿始知发笑尚在襁褓中。</td></tr>
+                                    <tr><td>幼年</td><td>垂髫、总角</td><td>指儿童，古时儿童将头发梳成两个发髻。</td></tr>
+                                    <tr><td>13-14岁（女）</td><td>豆蔻</td><td>指少女，源于杜牧诗"娉娉袅袅十三余，豆蔻梢头二月初"。</td></tr>
+                                    <tr><td>15岁（女）</td><td>及笄</td><td>古代女子十五岁行加笄之礼，表示成年。</td></tr>
+                                    <tr><td>16岁（女）</td><td>破瓜、碧玉年华</td><td>旧时文人拆"瓜"字为二八以纪年。</td></tr>
+                                    <tr><td>20岁（男）</td><td>弱冠</td><td>古代男子二十岁行冠礼，表示成年。</td></tr>
+                                    <tr><td>24岁（女）</td><td>花信年华</td><td>指女子的年龄到了二十四岁。</td></tr>
+                                    <tr><td>30岁</td><td>而立</td><td>源于《论语》"三十而立"。</td></tr>
+                                    <tr><td>40岁</td><td>不惑</td><td>源于《论语》"四十而不惑"。</td></tr>
+                                    <tr><td>50岁</td><td>知天命</td><td>源于《论语》"五十而知天命"。</td></tr>
+                                    <tr><td>60岁</td><td>花甲、耳顺</td><td>以天干地支纪年，六十年为一甲子。</td></tr>
+                                    <tr><td>70岁</td><td>古稀、从心</td><td>源于杜甫诗"人生七十古来稀"。</td></tr>
+                                    <tr><td>80-90岁</td><td>耄耋</td><td>耄指八十岁，耋指九十岁。</td></tr>
+                                    <tr><td>100岁</td><td>期颐</td><td>指百岁高寿。</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- 4. 五服图与亲戚称谓 -->
+                    <div class="person-card">
+                        <h4 style="color: #667eea; margin-bottom: 15px;">4. 五服图与亲戚称谓</h4>
+                        <div class="explanation" style="margin-bottom: 15px; padding: 15px; background: #f8f9fa; border-radius: 10px; font-size: 0.95em;">
+                            <p><strong>五服制度简介：</strong>五服是中国古代丧服制度中表示血缘关系亲疏的五个等级，用于确定服丧的规格与期限。五服等级由重至轻依次为：斩衰、齐衰、大功、小功、缌麻。</p>
+                        </div>
+                        
+                        <h5 style="color: #764ba2; margin: 20px 0 10px;">五服等级表：</h5>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>五服等级</th>
+                                        <th>丧服材质</th>
+                                        <th>服丧期限</th>
+                                        <th>适用亲属关系</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>斩衰</td><td>粗生麻布（左右下边不缝边）</td><td>三年</td><td>父母、儿女等直系亲属</td></tr>
+                                    <tr><td>齐衰</td><td>稍粗生麻布（辑边缝齐）</td><td>一年</td><td>兄弟姐妹、孙子孙女、亲侄子、亲伯亲叔、亲姑姑等</td></tr>
+                                    <tr><td>大功</td><td>粗熟麻布</td><td>九月</td><td>本家的堂兄弟、堂姐妹、堂姑等</td></tr>
+                                    <tr><td>小功</td><td>稍粗熟麻布</td><td>五月</td><td>高祖的直接后代</td></tr>
+                                    <tr><td>缌麻</td><td>较细熟麻布</td><td>三月</td><td>宗亲关系中最远的亲属</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="explanation" style="margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 10px; font-size: 0.95em;">
+                            <p><strong>说明：</strong>五服制体现了"血缘关系越近，丧服越重，服丧期也越长"的原则。以本人同辈亲属为例：为亲兄弟（同父兄弟）则齐衰，为堂兄弟（同祖兄弟）则大功，为从堂兄弟（同曾祖兄弟）则小功，为族兄弟（同高祖兄弟）则缌麻。</p>
+                        </div>
+                        
+                        <h5 style="color: #764ba2; margin: 20px 0 10px;">亲戚称谓</h5>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>关系类型</th>
+                                        <th>称谓</th>
+                                        <th>说明</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>直系亲属</td><td>父亲：阿爷</td><td></td></tr>
+                                    <tr><td>直系亲属</td><td>母亲：阿姥</td><td></td></tr>
+                                    <tr><td>直系亲属</td><td>祖父：太爷</td><td></td></tr>
+                                    <tr><td>直系亲属</td><td>祖母：太奶</td><td></td></tr>
+                                    <tr><td>直系亲属</td><td>曾祖父：高祖</td><td></td></tr>
+                                    <tr><td>直系亲属</td><td>曾祖母：高祖母</td><td></td></tr>
+                                    <tr><td>直系亲属</td><td>高祖父：老祖宗</td><td></td></tr>
+                                    <tr><td>直系亲属</td><td>高祖母：老祖宗</td><td></td></tr>
+                                    <tr><td>直系亲属</td><td>儿子：儿男</td><td></td></tr>
+                                    <tr><td>直系亲属</td><td>女儿：女亲</td><td></td></tr>
+                                    <tr><td>直系亲属</td><td>孙子：孙男</td><td></td></tr>
+                                    <tr><td>直系亲属</td><td>孙女：孙女</td><td></td></tr>
+                                    <tr><td>旁系血亲</td><td>伯父/叔父</td><td>父亲的兄长/弟弟</td></tr>
+                                    <tr><td>旁系血亲</td><td>伯母/叔母</td><td>伯父/叔父的妻子</td></tr>
+                                    <tr><td>旁系血亲</td><td>堂兄弟</td><td>同祖父的兄弟（父亲的兄弟之子）</td></tr>
+                                    <tr><td>旁系血亲</td><td>堂姐妹</td><td>同祖父的姐妹（父亲的兄弟之女）</td></tr>
+                                    <tr><td>旁系血亲</td><td>姑母</td><td>父亲的姐妹</td></tr>
+                                    <tr><td>旁系血亲</td><td>姑父</td><td>姑母的丈夫</td></tr>
+                                    <tr><td>旁系血亲</td><td>表兄弟</td><td>母亲的姐妹之子</td></tr>
+                                    <tr><td>旁系血亲</td><td>表姐妹</td><td>母亲的姐妹之女</td></tr>
+                                    <tr><td>姻亲</td><td>岳父：丈爷</td><td></td></tr>
+                                    <tr><td>姻亲</td><td>岳母：丈姥</td><td></td></tr>
+                                    <tr><td>姻亲</td><td>婆母：婆姥</td><td></td></tr>
+                                    <tr><td>姻亲</td><td>婆父：公爷</td><td></td></tr>
+                                    <tr><td>姻亲</td><td>大姨子</td><td>阿姥的姐姐</td></tr>
+                                    <tr><td>姻亲</td><td>小姨子</td><td>阿姥的妹妹</td></tr>
+                                    <tr><td>姻亲</td><td>大姑子</td><td>阿爷的姐姐</td></tr>
+                                    <tr><td>姻亲</td><td>小姑子</td><td>阿爷的妹妹</td></tr>
+                                    <tr><td>姻亲</td><td>大舅子</td><td>阿姥的哥哥</td></tr>
+                                    <tr><td>姻亲</td><td>小舅子</td><td>阿姥的弟弟</td></tr>
+                                    <tr><td>姻亲</td><td>大伯子</td><td>阿爷的哥哥</td></tr>
+                                    <tr><td>姻亲</td><td>小叔子</td><td>阿爷的弟弟</td></tr>
+                                    <tr><td>特殊称谓</td><td>姑女</td><td>大小姑子的儿子</td></tr>
+                                    <tr><td>特殊称谓</td><td>姑姨</td><td>大小姑子的女儿</td></tr>
+                                    <tr><td>特殊称谓</td><td>舅女</td><td>大小舅子的儿子</td></tr>
+                                    <tr><td>特殊称谓</td><td>舅姨</td><td>大小舅子的女儿</td></tr>
+                                    <tr><td>特殊称谓</td><td>叔女</td><td>大小叔儿的儿子</td></tr>
+                                    <tr><td>特殊称谓</td><td>叔姨</td><td>大小叔儿的女儿</td></tr>
+                                    <tr><td>特殊称谓</td><td>娣姒</td><td>兄弟的配偶间互相称呼（妯娌）</td></tr>
+                                    <tr><td>特殊称谓</td><td>连襟</td><td>姊妹的配偶间互相称呼（连襟兄弟）</td></tr>
+                                    <tr><td>特殊称谓</td><td>儿妇</td><td>对男儿的配偶的称呼</td></tr>
+                                    <tr><td>特殊称谓</td><td>儿婿</td><td>对女儿的配偶的称呼</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="explanation" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 10px; font-size: 0.95em;">
+                            <p><strong>五服与家族关系说明：</strong>传统上，"五服"之内血亲成员构成"家族"，"五服"之外的同姓族人则为"宗族"。"出五服"指血缘关系已很疏远，不再互相为其服丧，但仍是同姓族人。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 5. 中国传统礼仪与规矩 -->
+                    <div class="person-card">
+                        <h4 style="color: #667eea; margin-bottom: 15px;">5. 中国传统礼仪与规矩</h4>
+                        <div class="explanation" style="margin-bottom: 15px; padding: 15px; background: #f8f9fa; border-radius: 10px; font-size: 0.95em;">
+                            <p>中国素有"礼仪之邦"之称，正所谓"有礼仪之大谓之夏"。中国礼仪以周为最，古中国一般推行周礼。礼仪在中国文化中起着"准法律"的作用，渗透于人们日常生活中的点点滴滴。餐桌上的礼仪，待客之道，拜访致礼等，皆为礼仪的体现。</p>
+                        </div>
+                        
+                        <h5 style="color: #764ba2; margin: 20px 0 10px;">五礼体系</h5>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>礼仪类别</th>
+                                        <th>具体内容</th>
+                                        <th>适用场合</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>吉礼</td><td>祭祀之事</td><td>祭天、祭地、宗庙之祭、祀先师、先王、圣贤等</td></tr>
+                                    <tr><td>喜礼</td><td>冠婚之事</td><td>诞生礼、冠礼、笄礼、婚礼等</td></tr>
+                                    <tr><td>宾礼</td><td>宾客之事</td><td>乡饮、相见礼、馈赠礼仪等</td></tr>
+                                    <tr><td>军礼</td><td>军旅之事</td><td>军事礼仪、军阵礼仪等</td></tr>
+                                    <tr><td>凶礼</td><td>丧葬之事</td><td>丧礼、祭奠礼仪等</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <h5 style="color: #764ba2; margin: 20px 0 10px;">人生礼仪</h5>
+                        <div class="explanation" style="margin-bottom: 15px; padding: 15px; background: #f8f9fa; border-radius: 10px; font-size: 0.95em;">
+                            <p>人生礼仪是传统礼仪的核心内容，主要包括"生、冠、婚、丧"四个重要阶段：</p>
+                            <p><strong>（一）诞生礼：</strong>子孙繁衍是家族大事，自然隆重热闹。婴儿满月时，亲戚朋友纷纷上门恭贺，并馈赠营养食品与幼儿鞋帽衣物。传统上，婴儿出生后要举行"洗三"仪式，即出生第三天举行沐浴仪式，祈求婴儿健康平安。</p>
+                            <p><strong>（二）成年礼：</strong>冠礼：男子20岁举行，重新取一个名号，表示该男子具有了结婚、承担社会事务的资格。笄礼：女子15岁举行，表示到了出嫁的年龄。现代成年礼的年龄在18周岁，学校举行集体的成年宣誓仪式。</p>
+                            <p><strong>（三）婚嫁礼：</strong>传统婚礼有六道程序，所谓"周公六礼"，即纳采、问名、纳吉、纳征、请期、亲迎等。宋代简化为纳采、纳币、亲迎三礼。</p>
+                            <p><strong>（四）丧礼：</strong>人死于正命，是"白喜事"。为了表示哀悼心情，人们要奉上挽联、挽幛或礼品、礼金。丧礼是"凶礼"的典型代表，体现了中国人对生死的敬畏与尊重。</p>
+                        </div>
+                        
+                        <h5 style="color: #764ba2; margin: 20px 0 10px;">日常生活礼仪</h5>
+                        <div class="explanation" style="margin-bottom: 15px; padding: 15px; background: #f8f9fa; border-radius: 10px; font-size: 0.95em;">
+                            <p><strong>（一）见面礼仪：</strong>揖礼：起源于周代以前，约有三千年历史。有土揖、时揖、天揖、特揖、旅揖、旁三揖之分。拱手礼：又称"捧手礼"，多用于古人站立或行走时向他人拱手致意。叉手礼：始于西晋，男女老幼都可行使，由地位低者向地位高者行礼。叩首礼：最隆重的礼节，用于向尊长或神灵行礼。</p>
+                            <p><strong>（二）饮食礼仪：</strong>入座礼仪：室内座次以东向为尊，贵客坐西席，主人一般在东席作陪。年长者可安排在南向的位置，陪酒的晚辈一般在北向的位置。入坐规矩：饮食时人体尽量靠近食案，非饮食时，身体尽量靠后，所谓"虚坐尽后"。用餐礼仪：餐具使用：筷子、碗、勺等使用有讲究，不可用筷子指人。食物摆放：碗碟摆放有规矩，不可乱放。咀嚼礼仪：咀嚼时不可发出声音，不可说话。</p>
+                            <p><strong>（三）行走礼仪：</strong>趋礼：地位低的人在地位高的人面前走过时，必须低头弯腰，以小步快走的方式对尊者表示礼敬。行不中道，立不中门：走路不可走在路中间，应该靠边行走；站立不可站在门中间。</p>
+                        </div>
+                        
+                        <div class="explanation" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 10px; font-size: 0.95em;">
+                            <p><strong>传统礼仪与现代生活：</strong>传统礼仪虽历经时代变迁，但其核心精神——尊重、谦和、有序——仍具有重要的现实意义。现代生活中，我们可适当融入传统礼仪元素，如：重要场合使用拱手礼、作揖礼等传统礼仪形式；重视餐桌礼仪，体现对食物的尊重；重视家庭聚会中的礼仪规范，增强家庭凝聚力；传统节日中遵循礼仪规范，传承文化。</p>
+                            <p><strong>附注：</strong>中国传统礼仪文化是中华民族优秀传统文化的重要组成部分，其核心精神"礼之用，和为贵"，强调人际关系的和谐与秩序，对现代社会仍有重要的借鉴意义。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- 跋 -->
+            <div id="epilogue" class="section">
+                <h2>跋</h2>
+                <div class="loading">正在加载跋...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let genealogyData = [];
+        let membersData = [];
+        let otherContentData = {};
+        let biographiesData = [];
+        let filteredGenealogy = [];
+        let filteredMembers = [];
+        let filteredBiographies = [];
+
+        // 加载数据
+        async function loadData() {
+            try {
+                // 加载世系图谱
+                const genealogyResponse = await fetch('世系图谱.json');
+                if (!genealogyResponse.ok) {
+                    throw new Error(`HTTP错误! 状态: ${genealogyResponse.status}`);
+                }
+                genealogyData = await genealogyResponse.json();
+                filteredGenealogy = genealogyData;
+                renderGenealogy();
+
+                // 加载家族成员
+                const membersResponse = await fetch('家族数据概览.json');
+                if (!membersResponse.ok) {
+                    throw new Error(`HTTP错误! 状态: ${membersResponse.status}`);
+                }
+                membersData = await membersResponse.json();
+                filteredMembers = membersData;
+                renderOverview();
+                renderMembers();
+
+                // 加载其他内容
+                try {
+                    const otherContentResponse = await fetch('家谱其他内容.json');
+                    if (otherContentResponse.ok) {
+                        otherContentData = await otherContentResponse.json();
+                        console.log('其他内容加载成功:', otherContentData);
+                        
+                        // 单独处理族人传略数据
+                        if (otherContentData.族人传略) {
+                            biographiesData = otherContentData.族人传略;
+                            filteredBiographies = [...biographiesData];
+                            console.log('族人传略数据:', biographiesData);
+                            
+                            // 确保渲染族人传略
+                            renderBiographies();
+                        }
+                        
+                        renderOtherContent();
+                    }   else {
+                                // 如果JSON文件不存在，直接渲染附录内容
+                                renderAppendixDirectly();
+                             }
+                } catch (e) {
+                    console.warn('其他内容加载失败，将使用默认内容:', e);
+                    // 即使其他内容加载失败，也要确保族人传略容器有内容
+                    renderBiographies();
+                    // 直接渲染附录内容
+                    renderAppendixDirectly();
+                }
+
+                
+            } catch (error) {
+                console.error('加载数据失败:', error);
+                const errorMsg = error.message || '未知错误';
+                document.querySelectorAll('.loading').forEach(el => {
+                    el.innerHTML = `
+                        <div style="color: #dc3545; padding: 20px; text-align: center;">
+                            <h3 style="color: #dc3545;">数据加载失败</h3>
+                            <p>错误信息: ${errorMsg}</p>
+                            <p style="margin-top: 20px; font-size: 0.9em;">
+                                <strong>解决方案：</strong><br>
+                                1. 请使用本地服务器运行（推荐）<br>
+                                2. 双击运行 <strong>启动服务器.bat</strong> 文件<br>
+                                3. 或在命令行运行: <code>python server.py</code><br>
+                                4. 然后在浏览器中访问显示的地址
+                            </p>
+                            <p style="margin-top: 15px; font-size: 0.85em; color: #666;">
+                                注意：直接双击打开HTML文件可能无法加载JSON数据，<br>
+                                这是浏览器的安全限制，需要使用HTTP服务器。
+                            </p>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        // 渲染数据概览
+        function renderOverview() {
+            const overviewSection = document.getElementById('overview');
+            const validMembers = membersData.filter(m => m.姓名 && typeof m.序号 === 'number');
+            
+            const stats = {
+                total: validMembers.length,
+                male: validMembers.filter(m => m.性别 === '男').length,
+                female: validMembers.filter(m => m.性别 === '女').length,
+                households: new Set(validMembers.filter(m => m.关系 === '户主').map(m => m.序号)).size
+            };
+
+            overviewSection.innerHTML = `
+                <h2>数据概览</h2>
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number">${stats.total}</div>
+                        <div class="stat-label">总人数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${stats.male}</div>
+                        <div class="stat-label">男性</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${stats.female}</div>
+                        <div class="stat-label">女性</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${stats.households}</div>
+                        <div class="stat-label">户数</div>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>关系</th>
+                                <th>姓名</th>
+                                <th>性别</th>
+                                <th>出生时间</th>
+                                <th>学历</th>
+                                <th>常住地址</th>
+                                <th>工作单位和职务</th>
+                                <th>备注</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${validMembers.map(member => `
+                                <tr>
+                                    <td>${member.序号 || ''}</td>
+                                    <td>${member.关系 || ''}</td>
+                                    <td>${member.姓名 || ''}</td>
+                                    <td>${member.性别 || ''}</td>
+                                    <td>${formatDate(member.出生时间)}</td>
+                                    <td>${member.学历 || ''}</td>
+                                    <td>${member.常住地址 || ''}</td>
+                                    <td>${member.工作单位和职务 || ''}</td>
+                                    <td>${member.备注 || ''}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        // 渲染世系图谱
+        function renderGenealogy() {
+            const container = document.querySelector('#genealogy .table-container');
+            if (filteredGenealogy.length === 0) {
+                container.innerHTML = '<div class="loading">暂无数据</div>';
+                return;
+            }
+
+            // 获取表头（第一行）
+            const header = filteredGenealogy[0];
+            // 获取所有列，优先显示包含"世"的列
+            const allColumns = Object.keys(header);
+            const columns = allColumns.filter(key => {
+                const value = header[key];
+                return value && (value.includes('世') || value.includes('辈'));
+            });
+
+            // 如果没有找到，使用所有列
+            const finalColumns = columns.length > 0 ? columns : allColumns;
+
+            let html = `
+                <style>
+                    .genealogy-table-container {
+                        max-height: 600px;
+                        overflow: auto;
+                        position: relative;
+                    }
+                    .genealogy-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        background: white;
+                        min-width: 800px;
+                    }
+                    .genealogy-table thead {
+                        position: sticky;
+                        top: 0;
+                        z-index: 100;
+                    }
+                    .genealogy-table thead tr {
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                    }
+                    .genealogy-table th {
+                        padding: 15px;
+                        text-align: left;
+                        font-weight: 600;
+                        white-space: nowrap;
+                        position: sticky;
+                        top: 0;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        border-bottom: 2px solid #fff;
+                    }
+                    .genealogy-table td {
+                        padding: 12px 15px;
+                        border-bottom: 1px solid #e9ecef;
+                    }
+                    .genealogy-table tbody tr:hover {
+                        background: #f8f9fa;
+                    }
+                    .genealogy-table tbody tr:nth-child(even) {
+                        background: #f8f9fa;
+                    }
+                </style>
+                <div class="genealogy-table-container">
+                    <table class="genealogy-table">
+                        <thead>
+                            <tr>
+            `;
+            
+            finalColumns.forEach(col => {
+                const headerText = header[col] || col.replace('Unnamed: ', '列');
+                html += `<th>${headerText}</th>`;
+            });
+            
+            html += `
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            // 渲染数据行（跳过第一行表头）
+            filteredGenealogy.slice(1).forEach(row => {
+                // 检查这一行是否有数据
+                const hasData = finalColumns.some(col => row[col]);
+                if (hasData) {
+                    html += '<tr>';
+                    finalColumns.forEach(col => {
+                        const value = row[col];
+                        html += `<td class="${!value ? 'empty-cell' : ''}">${value ? value.toString().replace(/\n/g, '<br>') : ''}</td>`;
+                    });
+                    html += '</tr>';
+                }
+            });
+
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+                
+
+        // 渲染家族成员
+        function renderMembers() {
+            const container = document.getElementById('members-container');
+            const validMembers = filteredMembers.filter(m => m.姓名 && typeof m.序号 === 'number');
+
+            if (validMembers.length === 0) {
+                container.innerHTML = '<div class="loading">暂无数据</div>';
+                return;
+            }
+
+            // 按户主分组 - 找到每个户主，然后找到该户主之后直到下一个户主之前的所有成员
+            const households = [];
+            let currentHousehold = null;
+
+            validMembers.forEach(member => {
+                if (member.关系 === '户主') {
+                    // 保存之前的户主
+                    if (currentHousehold) {
+                        households.push(currentHousehold);
+                    }
+                    // 创建新的户主
+                    currentHousehold = {
+                        head: member,
+                        members: []
+                    };
+                } else if (currentHousehold) {
+                    // 添加到当前户主
+                    currentHousehold.members.push(member);
+                }
+            });
+
+            // 添加最后一个户主
+            if (currentHousehold) {
+                households.push(currentHousehold);
+            }
+
+            let html = '';
+            households.forEach(household => {
+                html += `
+                    <div class="person-card">
+                        <div class="person-header">
+                            ${getPhoto(household.head.姓名) ? `<img src="照片/${getPhoto(household.head.姓名)}" alt="${household.head.姓名}" class="person-photo">` : ''}
+                            <div class="person-info">
+                                <div class="person-name">${household.head.姓名}</div>
+                                <div class="person-relation">${household.head.关系 || '户主'}</div>
+                            </div>
+                        </div>
+                        <div class="person-details">
+                            <div class="detail-item">
+                                <div class="detail-label">性别</div>
+                                <div>${household.head.性别 || ''}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">出生时间</div>
+                                <div>${formatDate(household.head.出生时间)}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">学历</div>
+                                <div>${household.head.学历 || ''}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">常住地址</div>
+                                <div>${household.head.常住地址 || ''}</div>
+                            </div>
+                            ${household.head.工作单位和职务 ? `
+                            <div class="detail-item">
+                                <div class="detail-label">工作单位和职务</div>
+                                <div>${household.head.工作单位和职务}</div>
+                            </div>
+                            ` : ''}
+                        </div>
+                        ${household.members.length > 0 ? `
+                            <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #e9ecef;">
+                                <h3 style="color: #667eea; margin-bottom: 15px;">家庭成员</h3>
+                                <div class="person-details">
+                                    ${household.members.map(member => `
+                                        <div class="person-card" style="margin: 10px 0;">
+                                            <div class="person-header">
+                                                ${getPhoto(member.姓名) ? `<img src="照片/${getPhoto(member.姓名)}" alt="${member.姓名}" class="person-photo">` : ''}
+                                                <div class="person-info">
+                                                    <div class="person-name">${member.姓名}</div>
+                                                    <div class="person-relation">${member.关系 || ''}</div>
+                                                </div>
+                                            </div>
+                                            <div class="person-details">
+                                                <div class="detail-item">
+                                                    <div class="detail-label">性别</div>
+                                                    <div>${member.性别 || ''}</div>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <div class="detail-label">出生时间</div>
+                                                    <div>${formatDate(member.出生时间)}</div>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <div class="detail-label">学历</div>
+                                                    <div>${member.学历 || ''}</div>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <div class="detail-label">常住地址</div>
+                                                    <div>${member.常住地址 || ''}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // 搜索世系图谱
+        function searchGenealogy() {
+            const searchTerm = document.getElementById('genealogy-search').value.toLowerCase();
+            filteredGenealogy = genealogyData.filter(row => {
+                return Object.values(row).some(value => 
+                    value && value.toString().toLowerCase().includes(searchTerm)
+                );
+            });
+            renderGenealogy();
+        }
+
+        // 搜索家族成员
+        function searchMembers() {
+            const searchTerm = document.getElementById('members-search').value.toLowerCase();
+            filteredMembers = membersData.filter(member => {
+                return Object.values(member).some(value => 
+                    value && value.toString().toLowerCase().includes(searchTerm)
+                );
+            });
+            renderMembers();
+        }
+
+        // 格式化日期
+        function formatDate(timestamp) {
+            if (!timestamp || isNaN(timestamp)) return '';
+            const date = new Date(timestamp);
+            if (isNaN(date.getTime())) return '';
+            return date.getFullYear() + '年' + 
+                   (date.getMonth() + 1) + '月' + 
+                   date.getDate() + '日';
+        }
+
+        // 获取照片文件名
+        function getPhoto(name) {
+            if (!name) return null;
+            // 移除可能的空格和特殊字符
+            const cleanName = name.trim();
+            // 照片文件名列表
+            const photoFiles = [
+                '刘伍秀.jpg', '吴应美.jpg', '杨东昌.jpg', '杨丽.jpg', '杨伟.jpg',
+                '杨勇（塘垭）.jpg', '杨友昌.jpg', '杨吉昌.jpg', '杨坤昌.jpg', '杨帆.jpg',
+                '杨志.jpg', '杨文波.jpg', '杨昌俊（柳木）.jpg', '杨昌元.jpg', '杨昌全.jpg',
+                '杨昌茂.jpg', '杨柳.jpg', '杨毅.jpg', '杨洪兵.jpg', '杨洪平.jpg',
+                '杨洪文.jpg', '杨洪游.jpg', '杨洪高.jpg', '杨洪齐.jpg', '杨海珍.jpg',
+                '杨滔.jpg', '杨绪礼.jpg', '杨美俊（湖北十堰）.jpg', '杨美娟.jpg', '杨號.jpg',
+                '杨银昌（安阳）.jpg', '杨静.jpg'
+            ];
+            // 精确匹配或包含匹配
+            return photoFiles.find(file => {
+                const fileName = file.replace('.jpg', '');
+                return fileName === cleanName || cleanName.includes(fileName) || fileName.includes(cleanName);
+            }) || null;
+        }
+
+        // 渲染其他内容
+        function renderOtherContent() {
+            if (!otherContentData || Object.keys(otherContentData).length === 0) return;
+
+            // 修谱名录
+            if (otherContentData.修谱名录) {
+                const compilersSection = document.querySelector('#compilers .loading');
+                if (compilersSection) {
+                    compilersSection.outerHTML = `
+                        <div class="person-card">
+                            ${otherContentData.修谱名录.map(item => `
+                                <p style="margin: 15px 0; line-height: 1.8; white-space: pre-line;">${item}</p>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+            }
+
+            // 谱首
+            if (otherContentData.谱首) {
+                const prefaceSection = document.querySelector('#preface .loading');
+                if (prefaceSection) {
+                    const preface = otherContentData.谱首;
+                    prefaceSection.outerHTML = `
+                        <div>
+                            ${preface.序言 ? `
+                                <div class="person-card">
+                                    <h3 style="color: #667eea; margin-bottom: 15px;">序言</h3>
+                                    <p style="line-height: 1.8; white-space: pre-line;">${preface.序言}</p>
+                                </div>
+                            ` : ''}
+                            ${preface.修谱目的 ? `
+                                <div class="person-card">
+                                    <h3 style="color: #667eea; margin-bottom: 15px;">修谱目的</h3>
+                                    <p style="line-height: 1.8; white-space: pre-line;">${preface.修谱目的}</p>
+                                </div>
+                            ` : ''}
+                            ${preface.族规 ? `
+                                <div class="person-card">
+                                    <h3 style="color: #667eea; margin-bottom: 15px;">族规</h3>
+                                    <p style="line-height: 1.8; white-space: pre-line;">${preface.族规}</p>
+                                </div>
+                            ` : ''}
+                            ${preface.家训 ? `
+                                <div class="person-card">
+                                    <h3 style="color: #667eea; margin-bottom: 15px;">家训</h3>
+                                    <p style="line-height: 1.8; white-space: pre-line;">${preface.家训}</p>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+            }
+
+            // 先祖溯源
+            if (otherContentData.先祖溯源) {
+                const ancestorsSection = document.querySelector('#ancestors .loading');
+                if (ancestorsSection) {
+                    const ancestors = otherContentData.先祖溯源;
+                    ancestorsSection.outerHTML = `
+                        <div>
+                            ${ancestors.姓氏渊源 ? `
+                                <div class="person-card">
+                                    <h3 style="color: #667eea; margin-bottom: 15px;">姓氏渊源</h3>
+                                    <p style="line-height: 1.8; white-space: pre-line;">${ancestors.姓氏渊源}</p>
+                                </div>
+                            ` : ''}
+                            ${ancestors.祖德传略 ? `
+                                <div class="person-card">
+                                    <h3 style="color: #667eea; margin-bottom: 15px;">祖德传略</h3>
+                                    <p style="line-height: 1.8; white-space: pre-line;">${ancestors.祖德传略}</p>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+            }
+
+            // 字辈谱序
+
+            if (otherContentData.字辈谱序) {
+    const generationSection = document.querySelector('#generation .loading');
+    if (generationSection) {
+        generationSection.outerHTML = `
+            <div>
+                <!-- 家族传承介绍 -->
+                <div class="person-card">
+                    <div class="person-info">
+                        <div class="person-name">家族传承</div>
+                        <p>国有史，郡有志，家有谱，此乃传承之根基、脉络之源泉。字辈者，家族血缘递嬗之标识，世代伦常秩序之圭臬也。我族溯源久远，枝叶繁茂，散居四方。然岁月如流，若无名辈相承之规，恐后世子孙昧于宗亲，淆于昭穆，血脉虽连而情分渐疏，祖德虽厚而传承罔继。故合族贤达，秉持敬宗收族之愿，考稽先代遗绪，参酌古今范式，厘定字辈序列，以昭一脉之亲，以续千秋之绪。</p>
+                    </div>
+                </div>
+
+                <!-- 字辈展示 -->
+                <div class="person-card" style="text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <div class="person-info">
+                        <div class="person-name" style="color: white; margin-bottom: 20px;">杨氏字辈谱序</div>
+                        <div style="font-size: 1.3em; line-height: 2.5; font-weight: bold;">
+                            成 世 继 文 壁 宝 传 家 国<br>
+                            启 尊 绪 作 寿 尚 经 森 治<br>
+                            发 清 洪 邦 仁 宗 道 长 定<br>
+                            旺 正 昌 显 祥 功 学 及 官<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;立 良 远 光
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 传承意义 -->
+                <div class="person-card">
+                    <div class="person-info">
+                        <div class="person-name">传承意义</div>
+                        <p>观此字辈，或寄寓修齐治平之宏愿，或蕴含仁义礼智之德馨，或祈盼家道昌盛之愿景，或彰显忠贞孝悌之精神。字辈既定，族脉可循。愿后世子孙，逢名思祖德，见字念宗情。以字辈为纲，敦亲睦族守正创新；以家国为怀，立功立德，耀我门楣。岁月悠悠，字辈如绳，串起代际温情；山河浩浩，家风似炬，照亮奋进征途。盼吾族之人，谨遵字辈序，传承无尽期，让家族荣光，随字辈传承，如江河奔涌，永续不竭；若星辰列曜，辉映千秋。</p>
+                    </div>
+                </div>
+
+                <!-- 字辈寓意解读 -->
+                <div class="person-card">
+                    <div class="person-info">
+                        <div class="person-name">字辈寓意解读</div>
+                        <p>以下是对这组家族排行字进行的美好寓意解读，从家族传承、品德修养、家族愿景等角度展开：</p>
+                    </div>
+                </div>
+
+                <!-- 成启发旺 -->
+                <div class="person-card">
+                    <div class="person-header">
+                        <div class="person-info">
+                            <div class="person-name">成启发旺</div>
+                            <div class="person-relation">开创进取之精神</div>
+                        </div>
+                    </div>
+                    <div class="person-details">
+                        <div class="detail-item">
+                            <div class="detail-label">成</div>
+                            <div>寓意家族成员在人生道路上，无论学业、事业、品德修行，皆能有所成就，达成理想目标，为家族争光添彩。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">启</div>
+                            <div>象征开启新的篇章、新的机遇，代表家族后代有开拓进取的精神，能开启智慧、开启福运。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">发</div>
+                            <div>事业发展，希望后代能在学业、事业上奋发有为，通过自身努力开拓进取，取得成就。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">旺</div>
+                            <div>凸显家族人丁兴旺、运势旺盛，家族产业、事业蓬勃发展，代代传承中持续增强。</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 世尊清正 -->
+                <div class="person-card">
+                    <div class="person-header">
+                        <div class="person-info">
+                            <div class="person-name">世尊清正</div>
+                            <div class="person-relation">品德修养之根本</div>
+                        </div>
+                    </div>
+                    <div class="person-details">
+                        <div class="detail-item">
+                            <div class="detail-label">世</div>
+                            <div>代表世代、传承，期望家族优良传统、家风家训能跨越世代，在每一辈人身上延续。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">尊</div>
+                            <div>一方面指家族成员要尊重长辈、尊重宗族传统；另一方面，也盼家族后代能成为受人尊重的人。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">清</div>
+                            <div>寓意清正廉洁、清澈纯净，家族成员在为人处世中，坚守清廉正直的操守。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">正</div>
+                            <div>强调正直、正义、正道，家族后代要行得正、坐得端，秉持正确的价值观。</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 继绪洪昌 -->
+                <div class="person-card">
+                    <div class="person-header">
+                        <div class="person-info">
+                            <div class="person-name">继绪洪昌</div>
+                            <div class="person-relation">传承发展之愿景</div>
+                        </div>
+                    </div>
+                    <div class="person-details">
+                        <div class="detail-item">
+                            <div class="detail-label">继</div>
+                            <div>意为继承、延续，希望家族后代能继承先祖的功业、美德、智慧，接过家族发展的接力棒。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">绪</div>
+                            <div>有头绪、开端、功业之意，既指家族先辈留下的基业，也象征家族发展有新的头绪。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">洪</div>
+                            <div>代表宏大、洪大，寓意家族发展规模宏大，家族成员有宏大的志向、格局。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">昌</div>
+                            <div>象征昌盛、繁荣，涵盖家族人丁、事业、文化等多方面的昌盛。</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 文作邦显 -->
+                <div class="person-card">
+                    <div class="person-header">
+                        <div class="person-info">
+                            <div class="person-name">文作邦显</div>
+                            <div class="person-relation">文化作为之展现</div>
+                        </div>
+                    </div>
+                    <div class="person-details">
+                        <div class="detail-item">
+                            <div class="detail-label">文</div>
+                            <div>突出文化、文采、文德，家族重视文化传承与教育，期望后代有学识、有文化修养。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">作</div>
+                            <div>意为作为、创造，鼓励家族成员积极作为，在各自领域勇于创造、敢于拼搏。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">邦</div>
+                            <div>有家国之意，家族成员要心怀家国，将家族发展与国家命运相连。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">显</div>
+                            <div>期望家族成员能显达、显赫，在社会上展现家族风采，让家族声名远扬。</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 壁寿仁祥 -->
+                <div class="person-card">
+                    <div class="person-header">
+                        <div class="person-info">
+                            <div class="person-name">壁寿仁祥</div>
+                            <div class="person-relation">品德福寿之祈愿</div>
+                        </div>
+                    </div>
+                    <div class="person-details">
+                        <div class="detail-item">
+                            <div class="detail-label">壁</div>
+                            <div>可理解为如壁垒般坚固，寓意家族根基如壁垒稳固，家族成员有坚毅的品格。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">寿</div>
+                            <div>代表长寿、福寿，期望家族长辈健康长寿，家族后代也能福寿康宁。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">仁</div>
+                            <div>是儒家核心美德，强调家族成员要有仁爱之心，关爱家人、善待他人。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">祥</div>
+                            <div>象征吉祥、祥瑞，期望家族处处有祥瑞相伴，家族发展顺遂，成员平安幸福。</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 宝尚宗功立 -->
+                <div class="person-card">
+                    <div class="person-header">
+                        <div class="person-info">
+                            <div class="person-name">宝尚宗功立</div>
+                            <div class="person-relation">宗功祖德之传承</div>
+                        </div>
+                    </div>
+                    <div class="person-details">
+                        <div class="detail-item">
+                            <div class="detail-label">宝</div>
+                            <div>有珍视、宝贵之意，指家族先辈传承下来的精神财富、文化遗产等如珍宝般珍贵。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">尚</div>
+                            <div>意为崇尚、尊崇，家族崇尚宗功祖德，尊崇先辈的功绩、品德。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">宗</div>
+                            <div>代表宗族、祖宗，强调家族的宗族观念，后代要铭记祖宗恩情，维护宗族团结。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">功</div>
+                            <div>既指先辈创下的功业，后代要继承并光大；也鼓励后代自身建功立业。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">立</div>
+                            <div>寓意自立、树立，家族成员要学会自立自强，在社会上树立自己的形象、地位。</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 传经道学良 -->
+                <div class="person-card">
+                    <div class="person-header">
+                        <div class="person-info">
+                            <div class="person-name">传经道学良</div>
+                            <div class="person-relation">文化教育之重视</div>
+                        </div>
+                    </div>
+                    <div class="person-details">
+                        <div class="detail-item">
+                            <div class="detail-label">传</div>
+                            <div>强调传承，传承家族的文化、技艺、家风、宗功等，让家族的宝贵财富代代相传。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">经</div>
+                            <div>可理解为经典、经义，代表家族传承的文化经典、处世经义。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">道</div>
+                            <div>象征正道、大道，家族成员要遵循正确的人生道路、家族发展之道。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">学</div>
+                            <div>凸显学习、学问的重要性，家族鼓励后代热爱学习，通过求学、求知增长见识。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">良</div>
+                            <div>代表良好、贤良，期望家族成员品德优良、行为良善，成为贤良之人。</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 家森长及远 -->
+                <div class="person-card">
+                    <div class="person-header">
+                        <div class="person-info">
+                            <div class="person-name">家森长及远</div>
+                            <div class="person-relation">家族发展之宏图</div>
+                        </div>
+                    </div>
+                    <div class="person-details">
+                        <div class="detail-item">
+                            <div class="detail-label">家</div>
+                            <div>强调家族观念，家族是成员的根基与依靠，成员要热爱家族、维护家族。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">森</div>
+                            <div>象征繁茂、兴盛，寓意家族如森林般枝繁叶茂，家族人丁兴旺。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">长</div>
+                            <div>一是指家族长辈、长支要发挥引领作用；二是寓意家族发展长久。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">及</div>
+                            <div>有达到、涉及之意，期望家族发展能达到更高的境界，涉及更广泛的范围。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">远</div>
+                            <div>象征长远、高远，家族要有长远的眼光、高远的志向，不局限于眼前。</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 国治定官光 -->
+                <div class="person-card">
+                    <div class="person-header">
+                        <div class="person-info">
+                            <div class="person-name">国治定官光</div>
+                            <div class="person-relation">家国情怀之体现</div>
+                        </div>
+                    </div>
+                    <div class="person-details">
+                        <div class="detail-item">
+                            <div class="detail-label">国</div>
+                            <div>体现家国情怀，家族成员要心怀国家，将家族发展与国家命运紧密结合。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">治</div>
+                            <div>涵盖治理、安定之意，家族内部要治理有序，成员生活安稳、家族发展稳定。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">定</div>
+                            <div>象征安定、稳定，家族要保持安定团结，在安定的环境中传承家族、积累功业。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">官</div>
+                            <div>期望家族成员在各自岗位、领域，能有担当之责，秉持公心，为家族、社会尽责。</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">光</div>
+                            <div>寓意荣光、光彩，家族成员通过自身努力为家族增添光彩，让家族声名远播。</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 传承寄语 -->
+                <div class="person-card" style="text-align: center; background: #f8f9fa; border-left: 4px solid #667eea;">
+                    <div class="person-info">
+                        <div class="person-name">传承寄语</div>
+                        <p style="text-indent: 0; font-size: 1.1em; line-height: 1.8;">
+                            字辈既定，族脉可循。愿后世子孙，逢名思祖德，见字念宗情。<br>
+                            以字辈为纲，敦亲睦族，守正创新；以家国为怀，立功立德，耀我门楣。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+}
+
+
+       
+            // 跋
+            if (otherContentData.跋) {
+                const epilogueSection = document.querySelector('#epilogue .loading');
+                if (epilogueSection) {
+                    epilogueSection.outerHTML = `
+                        <div class="person-card">
+                            <p style="line-height: 1.8; white-space: pre-line;">${otherContentData.跋}</p>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // 渲染族人传略
+        function renderBiographies() {
+            const container = document.getElementById('biographies-container');
+            if (!container) return;
+
+            if (filteredBiographies.length === 0) {
+                container.innerHTML = '<div class="loading">暂无人物简介数据</div>';
+                return;
+            }
+
+            let html = '';
+            filteredBiographies.forEach(person => {
+                const photo = getPhoto(person.姓名);
+                html += `
+                    <div class="person-card">
+                        <div class="person-header">
+                            ${photo ? `<img src="照片/${photo}" alt="${person.姓名}" class="person-photo">` : '<div class="person-photo" style="background: #667eea; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2em;">${person.姓名.charAt(0)}</div>'}
+                            <div class="person-info">
+                                <div class="person-name">${person.姓名}</div>
+                                <div class="person-relation">${person.关系}</div>
+                                ${person.出生年份 ? `<div style="color: #666; font-size: 0.9em;">${person.出生年份}年出生</div>` : ''}
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <p style="line-height: 1.8; text-align: justify; margin: 0;">${person.简介}</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // 搜索族人传略
+        function searchBiographies() {
+            const searchTerm = document.getElementById('biographies-search').value.toLowerCase();
+            filteredBiographies = biographiesData.filter(person => 
+                person.姓名.toLowerCase().includes(searchTerm) ||
+                (person.关系 && person.关系.toLowerCase().includes(searchTerm)) ||
+                (person.简介 && person.简介.toLowerCase().includes(searchTerm))
+            );
+            renderBiographies();
+        }
+
+
+
+        // 搜索栏固定顶部功能
+        function initStickySearch() {
+            const searchBoxes = document.querySelectorAll('.search-box');
+            const nav = document.querySelector('.nav');
+            const header = document.querySelector('.header');
+            
+            function handleScroll() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const container = document.querySelector('.container');
+                const containerTop = container.offsetTop;
+                const navHeight = nav ? nav.offsetHeight : 0;
+                const headerHeight = header ? header.offsetHeight : 0;
+                
+                // 导航栏固定效果
+                if (nav) {
+                    if (scrollTop > containerTop) {
+                        nav.classList.add('sticky');
+                    } else {
+                        nav.classList.remove('sticky');
+                    }
+                }
+                
+                // 搜索栏固定效果
+                searchBoxes.forEach(searchBox => {
+                    const section = searchBox.closest('.section');
+                    if (!section || !section.classList.contains('active')) {
+                        searchBox.classList.remove('sticky');
+                        return;
+                    }
+                    
+                    const sectionRect = section.getBoundingClientRect();
+                    const searchBoxRect = searchBox.getBoundingClientRect();
+                    const stickyThreshold = navHeight + headerHeight;
+                    
+                    // 当搜索框滚动到导航栏下方时，固定它
+                    if (searchBoxRect.top <= stickyThreshold && sectionRect.bottom > stickyThreshold + 100) {
+                        searchBox.classList.add('sticky');
+                    } else {
+                        searchBox.classList.remove('sticky');
+                    }
+                });
+            }
+            
+            // 使用节流优化性能
+            let ticking = false;
+            function optimizedScroll() {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        handleScroll();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }
+            
+            window.addEventListener('scroll', optimizedScroll, { passive: true });
+            window.addEventListener('resize', optimizedScroll, { passive: true });
+            handleScroll(); // 初始检查
+        }
+
+        // 显示不同部分
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+            
+            // 移除所有搜索栏的sticky状态
+            document.querySelectorAll('.search-box').forEach(box => {
+                box.classList.remove('sticky');
+            });
+            
+            // 添加这部分：当切换到族人传略时，确保渲染
+            if (sectionId === 'biographies') {
+                renderBiographies();
+            }
+            
+            // 重新初始化sticky搜索
+            setTimeout(initStickySearch, 100);
+        }
+
+        // 页面加载时加载数据
+        window.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            initStickySearch();
+        });
+    </script>
+</body>
+</html>
+
